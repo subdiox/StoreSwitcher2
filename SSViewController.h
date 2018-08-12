@@ -6,6 +6,6 @@
 @interface SSViewController: UINavigationController<UITableViewDelegate, UITableViewDataSource>
 
 @property(retain, nonatomic) UITableViewController *tableViewController;
-@property(retain, nonatomic) NSArray *accounts;
+@property(retain, nonatomic) NSMutableArray *accounts;
 
 @end

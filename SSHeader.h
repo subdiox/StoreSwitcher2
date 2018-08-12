@@ -13,7 +13,8 @@
 + (id)defaultStore;
 - (NSArray *)accounts;
 //- (id)setActiveAccount:(SSAccount *)arg1 ;
-- (BOOL)saveAccount:(id)arg1 verifyCredentials:(BOOL)arg2 error:(id*)arg3 ;
+- (BOOL)saveAccount:(id)arg1 verifyCredentials:(BOOL)arg2 error:(id*)arg3;
+- (void)removeAccount:(id)arg1 error:(id*)arg2;
 @end
 
 @interface SSDevice

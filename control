@@ -1,7 +1,7 @@
 Package: com.subdiox.storeswitcher2
 Name: StoreSwitcher 2
 Depends: firmware (>= 11), mobilesubstrate
-Version: 1.0.0
+Version: 1.0.1
 Architecture: iphoneos-arm
 Description: Adds a button to switch account in App Store account page on iOS 11+.
 Maintainer: subdiox

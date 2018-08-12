@@ -25,13 +25,14 @@
       action:@selector(dismissAnimated)
     ];
   [[[self tableViewController] navigationItem] setLeftBarButtonItem:dismissButton];
+  [[[self tableViewController] navigationItem] setRightBarButtonItem: [[self tableViewController] editButtonItem]];
   NSMutableArray *allAccounts = [[[objc_getClass("SSAccountStore") defaultStore] accounts] mutableCopy];
   NSIndexSet *localAccountIndexSet = [allAccounts indexesOfObjectsPassingTest:^BOOL(id object, NSUInteger index, BOOL *stop) {
     SSAccount *account = (SSAccount *)object;
     return [account isLocalAccount];
   }];
   [allAccounts removeObjectsAtIndexes:localAccountIndexSet];
-  [self setAccounts:[allAccounts copy]];
+  [self setAccounts:allAccounts];
 }
 
 - (void)dismissAnimated {
@@ -203,7 +204,6 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-  NSLog(@"didSelect");
   [tableView deselectRowAtIndexPath:indexPath animated:YES];
   SSAccount *account = accounts[indexPath.row];
   //[[objc_getClass("SSAccountStore") defaultStore] setActiveAccount:account];
@@ -212,6 +212,23 @@
   [[objc_getClass("SSDevice") currentDevice] reloadStoreFrontIdentifier];
   [[[objc_getClass("SKUIClientContext") defaultContext] applicationController] _resetUserInterfaceAfterStoreFrontChange];
   [self dismissAnimated];
+}
+
+- (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath {
+  SSAccount *account = accounts[indexPath.row];
+  if (tableView.editing && ![account isActive]) {
+    return UITableViewCellEditingStyleDelete;
+  }
+  return UITableViewCellEditingStyleNone;
+}
+
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
+  SSAccount *account = accounts[indexPath.row];
+  if (![account isActive]) {
+    [[objc_getClass("SSAccountStore") defaultStore] removeAccount:account error:nil];
+    [accounts removeObjectAtIndex:indexPath.row];
+    [tableView reloadData];
+  }
 }
 
 @end
